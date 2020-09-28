@@ -12,15 +12,15 @@
 #include <PubSubClient.h>
 #include "DHT.h"
 
-const char* ssid = "AUKCSC_SMARTOFFICE";
-const char* password = "PASSWORD2020";
+const char* ssid = "ssid";
+const char* password = "password";
 String payload;
-const char* host = "http://192.168.1.1/gettimewlm.php";
-const char* serverName = "http://192.168.1.1/WLM.php";
-const char* cloudserverName = "http://52.237.118.211:8000/iotdevicedata/Water_level";
-String apiKeyValue = "tPmAT5Ab3j7F9";
-String productcode = "AukproDevice11032";
-String uniquekey = "!AiOtAtAuKpRoWl01";
+const char* host = "0.0.0.0:0000/myfile";
+const char* serverName = "0.0.0.0:0000/myfile";
+const char* cloudserverName = "0.0.0.0:0000/myfile";
+String apiKeyValue = "***********";
+String productcode = "***********";
+String uniquekey = "*************";
 String modelname = "Water_level";
 int p1;
 String date;
