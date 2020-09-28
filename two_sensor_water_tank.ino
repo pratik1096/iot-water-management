@@ -55,20 +55,6 @@ long lastMeasure = 0;
 float percent2 = 0;
 float percent1 = 0;
 
-
-// Don't change the function below. This functions connects your ESP8266 to your router
-#ifdef ESP32
-#include <WiFi.h>
-#include <HTTPClient.h>
-#else
-#include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
-#include <WiFiClient.h>
-#endif
-
-#include <Wire.h>
-
-
 void setup() {
   pinMode(trigPin1, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin1, INPUT); // Sets the echoPin as an Input
@@ -78,12 +64,10 @@ void setup() {
   Serial.begin(115200); // Starts the serial communication
 
   pinMode(relay, OUTPUT);
-  //  pinMode(sensor_pin, INPUT);
   Serial.println("Reading From the Sensor ...");
 
   delay(2000);
   delay(10);
-  // We start by connecting to a WiFi network
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -129,36 +113,12 @@ void localserver() {
 
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-
-    // Your Domain name with URL path or IP address with path
     http.begin(serverName);
-
-    // Specify content-type header
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    // Prepare your HTTP POST request data
     String httpRequestData = "api_key=" + apiKeyValue + "&product_code=" + productcode + "&model_name=" + modelname + "&unique_key=" + uniquekey + "&tank=" + percent1 + "&tank1=" + percent2 + "";
-
-    //Motion_status  Moisture_level  Light_Intensity Water_level LAT_LONG  RFID
-
     Serial.print("httpRequestData: ");
     Serial.println(httpRequestData);
-
-    // You can comment the httpRequestData variable above
-    // then, use the httpRequestData variable below (for testing purposes without the BME280 sensor)
-    //String httpRequestData = "api_key=tPmAT5Ab3j7F9&sensor=BME280&location=Office&value1=24.75&value2=49.54&value3=1005.14";
-
-    // Send HTTP POST request
     int httpResponseCode = http.POST(httpRequestData);
-
-    // If you need an HTTP request with a content type: text/plain
-    //http.addHeader("Content-Type", "text/plain");
-    //int httpResponseCode = http.POST("Hello, World!");
-
-    // If you need an HTTP request with a content type: application/json, use the following:
-    //http.addHeader("Content-Type", "application/json");
-    //int httpResponseCode = http.POST("{\"value1\":\"19\",\"value2\":\"67\",\"value3\":\"78\"}");
-
     if (httpResponseCode > 0) {
       Serial.print("HTTP Response code: ");
       Serial.println(httpResponseCode);
@@ -167,52 +127,23 @@ void localserver() {
       Serial.print("Error code: ");
       Serial.println(httpResponseCode);
     }
-
-    // Free resources
     http.end();
   }
   else {
     Serial.println("WiFi Disconnected");
   }
-  //Send an HTTP POST request every 30 seconds
-
-
 }
 void cloudserver() {
 
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-
-    // Your Domain name with URL path or IP address with path
     http.begin(cloudserverName);
-
-    // Specify content-type header
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    // Prepare your HTTP POST request data
     String httpRequestData = "api_key=" + apiKeyValue + "&product_code=" + productcode + "&model_name=" + modelname + "&unique_key=" + uniquekey + "&tank=" + percent1 + "&tank1=" + percent2 
                               + "&date=" + date + "&hh=" + hh + "&mm=" + mm + "" ;
-          
-    //Motion_status  Moisture_level  Light_Intensity Water_level LAT_LONG  RFID
-
-    Serial.print("httpRequestData: ");
+        Serial.print("httpRequestData: ");
     Serial.println(httpRequestData);
-
-    // You can comment the httpRequestData variable above
-    // then, use the httpRequestData variable below (for testing purposes without the BME280 sensor)
-    //String httpRequestData = "api_key=tPmAT5Ab3j7F9&sensor=BME280&location=Office&value1=24.75&value2=49.54&value3=1005.14";
-
-    // Send HTTP POST request
     int httpResponseCode = http.POST(httpRequestData);
-
-    // If you need an HTTP request with a content type: text/plain
-    //http.addHeader("Content-Type", "text/plain");
-    //int httpResponseCode = http.POST("Hello, World!");
-
-    // If you need an HTTP request with a content type: application/json, use the following:
-    //http.addHeader("Content-Type", "application/json");
-    //int httpResponseCode = http.POST("{\"value1\":\"19\",\"value2\":\"67\",\"value3\":\"78\"}");
-
     if (httpResponseCode > 0) {
       Serial.print("HTTP Response code: ");
       Serial.println(httpResponseCode);
@@ -221,17 +152,12 @@ void cloudserver() {
       Serial.print("Error code: ");
       Serial.println(httpResponseCode);
     }
-
-    // Free resources
     http.end();
   }
   else {
     Serial.println("WiFi Disconnected");
   }
-  //Send an HTTP POST request every 30 seconds
-
 }
-
 
 void loop() {
   digitalWrite(trigPin1, LOW);
